@@ -40,18 +40,20 @@ class nodejs(
     }
 
     'Fedora', 'RedHat', 'CentOS', 'OEL', 'OracleLinux', 'Amazon': {
-      package { 'nodejs-stable-release':
-        ensure => absent,
-        before => Yumrepo['nodejs-stable'],
-      }
+      if $::lsbmajdistrelease == 5 {
+        package { 'nodejs-stable-release':
+          ensure => absent,
+          before => Yumrepo['nodejs-stable'],
+        }
 
-      yumrepo { 'nodejs-stable':
-        descr    => 'Stable releases of Node.js',
-        baseurl  => $nodejs::params::baseurl,
-        enabled  => 1,
-        gpgcheck => $nodejs::params::gpgcheck,
-        gpgkey   => 'http://patches.fedorapeople.org/oldnode/stable/RPM-GPG-KEY-tchol',
-        before   => Anchor['nodejs::repo'],
+        yumrepo { 'nodejs-stable':
+          descr    => 'Stable releases of Node.js',
+          baseurl  => $nodejs::params::baseurl,
+          enabled  => 1,
+          gpgcheck => $nodejs::params::gpgcheck,
+          gpgkey   => 'http://patches.fedorapeople.org/oldnode/stable/RPM-GPG-KEY-tchol',
+          before   => Anchor['nodejs::repo'],
+        }
       }
     }
 
